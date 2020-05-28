@@ -101,30 +101,18 @@ purchaseCancelHandler = () => {
     }
 
     purchaseContinueHandler = () => {
-       // alert('You Continue');
-       this.setState({ loading :true });
-       const order ={
-           ingredients : this.state.ingredients,
-           price: this.state.totalPrice,
-           customer :{
-               name:'Rahul',
-               address :{
-                   street: 'Test Street',
-                   zipCode: '540009',
-                   country:'India'
-               },
-              email: 'test@test.com'
+    const queryParams =[];
+    //let price = Number.parseFloat(this.state.totalPrice).toFixed(2);
+    for(let i in this.state.ingredients) {
+      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
+    }
+    queryParams.push('price=' + this.state.totalPrice.toFixed(2));
+    const queryString =queryParams.join('&');
 
-           },
-           deliveryMethod: 'fastest'
-       }
-       axios.post('/orders.json' , order)
-       .then( response => {
-           this.setState({ loading : false , purchasing : false });
-       })
-       .catch(error => {
-        this.setState({ loading : false , purchasing : false });
-       });
+          this.props.history.push({
+              pathname : '/checkout',
+              search : '?' + queryString
+          });
         
         }
 
